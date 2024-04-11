@@ -3,16 +3,24 @@ from PIL import Image
 import requests
 import io
 
-# Define the Hugging Face API URL
-API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-refiner-1.0"
+# Define the Hugging Face API URL for the u2net model
+API_URL = "https://api-inference.huggingface.co/models/u2net/u2net"
 
 
 def process_image(image_data, api_key):
-    """Processes an image by removing the background using the API."""
+    """Processes an image by removing the background using the u2net API."""
     headers = {"Authorization": f"Bearer {api_key}"}
-    response = requests.post(API_URL, headers=headers, data=image_data)
+    response = requests.post(API_URL, headers=headers, files={"image": image_data})
+
     if response.status_code == 200:
-        return Image.open(io.BytesIO(response.content))
+        mask_data = response.content
+        mask_image = Image.open(io.BytesIO(mask_data)).convert("L")  # Convert to grayscale
+
+        # Apply mask to the original image to remove background
+        original_image = Image.open(io.BytesIO(image_data)).convert("RGBA")
+        empty_image = Image.new("RGBA", original_image.size, 0)
+        refined_image = Image.composite(original_image, empty_image, mask_image)
+        return refined_image
     else:
         st.write(f"Error: {response.status_code}, {response.text}")
         return None
@@ -20,7 +28,7 @@ def process_image(image_data, api_key):
 
 def main():
     """Main function of the Streamlit app."""
-    st.title("Background Removal with Stable Diffusion XL Refiner")
+    st.title("Background Removal with U2Net")
 
     # Get API key from secrets
     api_key = st.secrets["API_KEY"]
