@@ -1,6 +1,8 @@
 import streamlit as st
 from PIL import Image
 from rembg import remove
+import io
+import base64
 
 def main():
     """Main function of the Streamlit app."""
@@ -22,12 +24,12 @@ def main():
             st.image(refined_image, caption='Refined Image', use_column_width=True)
 
             # Download button (maintaining transparency)
-            btn = st.download_button(
-                label="Download Image",
-                data=refined_image,
-                file_name="refined_image.png",
-                mime="image/png"
-            )
+            buffered = io.BytesIO()
+            refined_image.save(buffered, format="PNG")
+            img_str = base64.b64encode(buffered.getvalue()).decode()
+
+            href = f'<a href="data:file/png;base64,{img_str}" download="refined_image.png">Download Image</a>'
+            st.markdown(href, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
