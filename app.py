@@ -18,7 +18,7 @@ def main():
             process_and_display(single_uploaded_file)
 
     st.subheader("Multi-Mode:")
-    elif st.button("Go Pro!"):
+    if st.button("Go Pro!"):
         st.write("Upload multiple JPG/JPEG/PNG images (up to 15 files, total size less than 200 MB), and remove backgrounds with one click.")
     
         # Upload multiple images
