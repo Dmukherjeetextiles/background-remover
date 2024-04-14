@@ -33,26 +33,26 @@ def main():
                 if st.button("Remove Background (Multi-Mode)"):
                     for file_idx, file in enumerate(multi_uploaded_files):
                         st.write(f"Image {file_idx + 1}:")
-                        process_and_display(file, key=f"multi_image_{file_idx}")
+                        process_and_display(file, identifier=file_idx)
 
-def process_and_display(uploaded_file, key=None):
+def process_and_display(uploaded_file, identifier=None):
     """Process uploaded image, remove background, and display refined image."""
     image = Image.open(uploaded_file)
-    st.image(image, caption='Uploaded Image', use_column_width=True, key=key)
+    st.image(image, caption=f'Uploaded Image {identifier + 1}', use_column_width=True)
 
-    if st.button("Remove Background", key=f"button_{key}"):
+    if st.button("Remove Background"):
         # Process image with rembg (local processing)
         refined_image = remove(image)
 
         # Display the refined image
-        st.image(refined_image, caption='Refined Image', use_column_width=True, key=f"image_{key}")
+        st.image(refined_image, caption=f'Refined Image {identifier + 1}', use_column_width=True)
 
         # Download button (maintaining transparency)
         buffered = io.BytesIO()
         refined_image.save(buffered, format="PNG")
         img_str = base64.b64encode(buffered.getvalue()).decode()
 
-        href = f'<a href="data:file/png;base64,{img_str}" download="refined_image_{key}.png">Download Image</a>'
+        href = f'<a href="data:file/png;base64,{img_str}" download="refined_image_{identifier}.png">Download Image</a>'
         st.markdown(href, unsafe_allow_html=True)
 
 if __name__ == "__main__":
