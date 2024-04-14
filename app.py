@@ -17,7 +17,7 @@ def main():
     #     process_and_display(single_uploaded_file)
 
     st.subheader("Multi-Mode:")
-    st.write("You may upload single or multiple JPG/JPEG/PNG images (up to 15 files, total size less than 200 MB), and remove backgrounds with one click.")
+    st.write("You may upload single or multiple JPG/JPEG/PNG images (up to 15 files), and remove backgrounds with one click.")
 
     # Upload multiple images
     multi_uploaded_files = st.file_uploader("Choose your images...", accept_multiple_files=True, type=["jpg", "jpeg", "png"], key="multi_mode")
