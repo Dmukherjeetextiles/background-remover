@@ -40,7 +40,7 @@ def process_and_display(uploaded_file, identifier=None):
     image = Image.open(uploaded_file)
     st.image(image, caption=f'Uploaded Image {identifier + 1}', use_column_width=True)
 
-    if st.button("Remove Background"):
+    if st.button(f"Remove Background {identifier + 1}"):
         # Process image with rembg (local processing)
         refined_image = remove(image)
 
