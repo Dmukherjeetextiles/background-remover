@@ -7,20 +7,20 @@ import base64
 def main():
     """Main function of the Streamlit app."""
     st.title("One-Click Background Removal")
-    st.subheader("Single Mode:")
-    st.write("Upload your JPG/JPEG/PNG image, click the remove background button, and download the refined image.")
+    # st.subheader("Single Mode:")
+    # st.write("Upload your JPG/JPEG/PNG image, click the remove background button, and download the refined image.")
 
-    # Upload single image
-    single_uploaded_file = st.file_uploader("Choose one image...", type=["jpg", "jpeg", "png"], key="single_mode")
+    # # Upload single image
+    # single_uploaded_file = st.file_uploader("Choose one image...", type=["jpg", "jpeg", "png"], key="single_mode")
 
-    if single_uploaded_file is not None:
-        process_and_display(single_uploaded_file)
+    # if single_uploaded_file is not None:
+    #     process_and_display(single_uploaded_file)
 
     st.subheader("Multi-Mode:")
-    st.write("Upload multiple JPG/JPEG/PNG images (up to 15 files, total size less than 200 MB), and remove backgrounds with one click.")
+    st.write("You may upload single or multiple JPG/JPEG/PNG images (up to 15 files, total size less than 200 MB), and remove backgrounds with one click.")
 
     # Upload multiple images
-    multi_uploaded_files = st.file_uploader("Choose multiple images...", accept_multiple_files=True, type=["jpg", "jpeg", "png"], key="multi_mode")
+    multi_uploaded_files = st.file_uploader("Choose your images...", accept_multiple_files=True, type=["jpg", "jpeg", "png"], key="multi_mode")
 
     if multi_uploaded_files:
         if len(multi_uploaded_files) > 15:
@@ -30,7 +30,7 @@ def main():
             if total_size > 200*1024*1024:
                 st.error("Total size of uploaded files exceeds 200 MB.")
             else:
-                if st.button("Remove Background (Multi-Mode)"):
+                if st.button("Multi-Mode Xtreme"):
                     for file_idx, file in enumerate(multi_uploaded_files):
                         st.write(f"Image {file_idx + 1}:")
                         process_and_display(file, identifier=file_idx)
