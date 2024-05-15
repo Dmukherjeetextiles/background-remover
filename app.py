@@ -3,6 +3,7 @@ from PIL import Image
 from rembg import remove
 import io
 import base64
+import zipfile
 
 def upload_single_image():
     """Function to upload a single image."""
@@ -61,6 +62,26 @@ def process_and_display_multiple_images(multi_uploaded_files):
             href = f'<a href="data:file/png;base64,{img_str}" download="refined_image_{file_idx + 1}.png">Download Image {file_idx + 1}</a>'
             st.markdown(href, unsafe_allow_html=True)
 
+def download_all_images(multi_uploaded_files):
+    """Download all refined images as a zip file."""
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED, False) as zip_file:
+        for file_idx, file in enumerate(multi_uploaded_files):
+            image = Image.open(file)
+            refined_image = remove(image)
+
+            # Save refined image to zip file
+            img_bytes = io.BytesIO()
+            refined_image.save(img_bytes, format="PNG")
+            zip_file.writestr(f"refined_image_{file_idx + 1}.png", img_bytes.getvalue())
+
+    # Set zip file pointer to beginning
+    zip_buffer.seek(0)
+
+    # Download zip file
+    href = f'<a href="data:application/zip;base64,{base64.b64encode(zip_buffer.getvalue()).decode()}" download="refined_images.zip">Download All Images</a>'
+    st.markdown(href, unsafe_allow_html=True)
+
 def main():
     st.title("One-Click Background Removing")
 
@@ -80,6 +101,7 @@ def main():
 
         if multi_uploaded_files:
             process_and_display_multiple_images(multi_uploaded_files)
+            download_all_images(multi_uploaded_files)
 
 if __name__ == "__main__":
     main()
